@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bella Ciao | Parturi-Kampaamo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin:0; font-family: 'Poppins', sans-serif; background:#f5f5f5; color:#111; line-height:1.6;
+}
+
+header {
+  background: url('https://images.unsplash.com/photo-1599867648371-9c1f3d824e07?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+  color: #fff; padding: 100px 20px; text-align:center; position: relative;
+}
+header::after {
+  content:""; position:absolute; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5);
+}
+header h1, header p, .lang-switch, #booking-btn { position: relative; z-index:1; }
+header h1 { font-size:3rem; margin-bottom:10px; color:#FFD700; }
+header p { font-size:1.2rem; opacity:0.9; color:#FF8C00; }
+
+.lang-switch { position: absolute; top:20px; right:20px; display:flex; gap:8px; }
+.lang-switch img {
+  width:40px; height:auto; border:2px solid #fff; border-radius:6px; cursor:pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.lang-switch img:hover { transform: scale(1.1); opacity:0.8; }
+
+/* Yhtenäiset osiot: Tervetuloa, Palvelumme, Aukioloajat */
+section {
+  max-width:1100px; 
+  margin:40px auto; 
+  padding:60px 20px;
+  border-radius:12px; 
+  box-shadow:0 6px 20px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg,#FFD700,#FF8C00);
+  color:#111;
+  text-align:center;
+}
+h2 { font-size:2rem; margin-bottom:20px; color:#111; }
+h3 { margin-top:30px; color:#FF8C00; }
+p, li { color:#111; }
+
+/* Kartta */
+.map { width:100%; height:350px; border:none; border-radius:8px; margin-top:20px; }
+
+/* CTA section säilyy ennallaan */
+.cta {
+  background: linear-gradient(135deg,#FFD700,#FF8C00); color:#111; text-align:center;
+  padding:60px 20px; margin:40px auto; border-radius:12px;
+  max-width:1100px; box-shadow:0 6px 20px rgba(0,0,0,0.2);
+}
+.cta h2, .cta p { color:#111; }
+.cta a {
+  display:inline-block; margin-top:20px; background:#111; color:#FFD700; padding:14px 28px;
+  text-decoration:none; font-weight:bold; border-radius:8px; transition:0.3s;
+}
+.cta a:hover { background:#333; color:#fff; transform:scale(1.05); }
+
+/* Accordion-palvelulistat */
+.accordion {
+  cursor:pointer; padding:14px; width:100%; text-align:left;
+  border:none; outline:none; font-size:16px; transition:0.2s;
+  border-radius:8px; margin-top:10px; font-weight:600; color:#111;
+  background:#FFD700;
+}
+.accordion.active { color:#fff; background:linear-gradient(135deg,#FFD700,#FF8C00); }
+.panel {
+  padding:0 12px; display:none; background:white; overflow:hidden;
+  border-left:4px solid #FFD700; border-right:4px solid #FFD700; border-bottom:4px solid #FFD700;
+  border-radius:0 0 8px 8px; margin-bottom:15px;
+}
+.panel p { margin:8px 0; transition: transform 0.2s; color:#111;}
+.panel p:hover { transform: translateX(5px); color:#FF8C00; font-weight:700; }
+
+footer { text-align:center; padding:30px; color:#777; }
+
+a#booking-btn, a#booking-btn-cta {
+  background:#111;color:#FFD700;padding:12px 24px;text-decoration:none;font-weight:bold;border-radius:6px;
+  display:inline-block; margin-top:20px; transition:0.3s;
+}
+a#booking-btn:hover, a#booking-btn-cta:hover { background:#333; color:#fff; transform:scale(1.05);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bella Ciao</h1>
+  <p id="subtitle">Laadukas parturi-kampaamo Vantaalla</p>
+  <div class="lang-switch">
+    <img src="https://flagcdn.com/fi.svg" alt="Suomi" title="Suomi" onclick="setLang('fi')">
+    <img src="https://flagcdn.com/gb.svg" alt="English" title="English" onclick="setLang('en')">
+  </div>
+  <div>
+    <a id="booking-btn" href="https://timma.fi/yritys/bella-ciao" target="_blank">Varaa aika</a>
+  </div>
+</header>
+
+<!-- Tervetuloa-osio -->
+<section class="welcome-section">
+  <h2 id="about-title">Tervetuloa Bella Ciaoon</h2>
+  <p id="about-text">Bella Ciao on moderni ja asiakaslähtöinen parturi-kampaamo, jossa tyyli, laatu ja mukava palvelu kohtaavat.</p>
+</section>
+
+<!-- Palvelumme osio -->
+<section class="services-section">
+  <h2 id="services-title">Palvelumme</h2>
+  <div id="services-container"></div>
+</section>
+
+<!-- Toimipiste -->
+<section>
+  <h2 id="locations-title">Toimipisteemme</h2>
+  <h3>📍 Myyrmäki – Vantaa</h3>
+  <p id="myyrmaki-desc">Vantaan Myyrmäki – Iskoskuja 1, 01600 Vantaa<br>Sijaitsee Myyrmannin vieressä, Virtatalon vastapäätä.</p>
+  <iframe class="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Iskoskuja+1,+Vantaa&output=embed"></iframe>
+</section>
+
+<!-- Aukioloajat osio -->
+<section class="hours">
+  <h2 id="hours-title">Aukioloajat</h2>
+  <ul>
+    <li id="hours-mon">Ma–Pe: 9.00–19.00</li>
+    <li id="hours-sat">La: 10.00–18.00</li>
+    <li id="hours-sun">Su: 10.00–19.00</li>
+  </ul>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2 id="cta-title">Varaa aikasi helposti jo tänään 😊</h2>
+  <p id="cta-text">Tule kokemaan erinomainen palvelu ja uusi tyylisi</p>
+  <a id="booking-btn-cta" href="https://timma.fi/yritys/bella-ciao" target="_blank">Varaa aika</a>
+</section>
+
+<footer>
+  <p>© 2025 Bella Ciao – Parturi-Kampaamo</p>
+</footer>
+
+<script>
+const content = {
+  fi: {
+    subtitle: "Laadukas parturi-kampaamo Vantaalla",
+    aboutTitle: "Tervetuloa Bella Ciaoon",
+    aboutText: "Bella Ciao on moderni ja asiakaslähtöinen parturi-kampaamo, jossa tyyli, laatu ja mukava palvelu kohtaavat.",
+    services: [
+      {category:"Värjäykset", name:"Väri ja leikkaus (extrapitkät)", price:"160€"},
+      {category:"Värjäykset", name:"Väri ja leikkaus (lyhyet)", price:"90€"},
+      {category:"Värjäykset", name:"Väri ja leikkaus (pitkät)", price:"125€"},
+      {category:"Värjäykset", name:"Väri ja leikkaus (keskipitkät)", price:"110€"},
+      {category:"Värjäykset", name:"Tyviväri", price:"60€"},
+      {category:"Leikkaukset", name:"Parturileikkaus", price:"alk. 20€"},
+      {category:"Leikkaukset", name:"Lasten hiustenleikkaus (lyhyet hiukset)", price:"18€"},
+      {category:"Leikkaukset", name:"Koneajo", price:"alk. 15€"},
+      {category:"Leikkaukset", name:"Parran siistiminen / ajaminen", price:"alk. 15€"},
+      {category:"Leikkaukset", name:"Lasten hiustenleikkaus (pitkät hiukset)", price:"25€"},
+      {category:"Leikkaukset", name:"Kampaamoleikkaus", price:"alk. 33€"},
+      {category:"Leikkaukset", name:"Otsatukan leikkaus", price:"12€"},
+      {category:"Leikkaukset", name:"Mallinmuutosleikkaus", price:"alk. 36€"},
+      {category:"Monivärit / Raidat", name:"Raidat ja leikkaus (lyhyet)", price:"100€"},
+      {category:"Monivärit / Raidat", name:"Raidat ja leikkaus (keskipitkät)", price:"140€"},
+      {category:"Monivärit / Raidat", name:"Raidat ja leikkaus (pitkät)", price:"180€"},
+      {category:"Monivärit / Raidat", name:"Raidat ja leikkaus (extrapitkät)", price:"180€"},
+      {category:"Monivärit / Raidat", name:"Raidat (lyhyet)", price:"90€"},
+      {category:"Monivärit / Raidat", name:"Raidat (keskipitkät)", price:"130€"},
+      {category:"Monivärit / Raidat", name:"Raidat (pitkät)", price:"160€"},
+      {category:"Parta", name:"Parran ja viiksien muotoilu", price:"20€"}
+    ],
+    ctaTitle:"Varaa aikasi helposti jo tänään 😊",
+    ctaText:"Tule kokemaan erinomainen palvelu ja uusi tyylisi",
+    locationsTitle:"Toimipisteemme",
+    myyrmakiDesc:"Vantaan Myyrmäki – Iskoskuja 1, 01600 Vantaa\nSijaitsee Myyrmannin vieressä, Virtatalon vastapäätä.",
+    hoursTitle:"Aukioloajat",
+    hoursMon:"Ma–Pe: 9.00–19.00",
+    hoursSat:"La: 10.00–18.00",
+    hoursSun:"Su: 10.00–19.00",
+    bookingText:"Varaa aika"
+  },
+  en: {
+    subtitle: "High-quality hair salon in Vantaa",
+    aboutTitle: "Welcome to Bella Ciao",
+    aboutText: "Bella Ciao is a modern, customer-focused hair salon where style, quality, and friendly service meet.",
+    services: [
+      {category:"Coloring", name:"Color and cut (extra long)", price:"160€"},
+      {category:"Coloring", name:"Color and cut (short)", price:"90€"},
+      {category:"Coloring", name:"Color and cut (long)", price:"125€"},
+      {category:"Coloring", name:"Color and cut (medium)", price:"110€"},
+      {category:"Coloring", name:"Root color", price:"60€"},
+      {category:"Haircuts", name:"Men's haircut", price:"from 20€"},
+      {category:"Haircuts", name:"Kids haircut (short)", price:"18€"},
+      {category:"Haircuts", name:"Clipper cut", price:"from 15€"},
+      {category:"Haircuts", name:"Beard trim", price:"from 15€"},
+      {category:"Haircuts", name:"Kids haircut (long)", price:"25€"},
+      {category:"Haircuts", name:"Salon haircut", price:"from 33€"},
+      {category:"Haircuts", name:"Bangs trim", price:"12€"},
+      {category:"Haircuts", name:"Style change haircut", price:"from 36€"},
+      {category:"Highlights", name:"Highlights and cut (short)", price:"100€"},
+      {category:"Highlights", name:"Highlights and cut (medium)", price:"140€"},
+      {category:"Highlights", name:"Highlights and cut (long)", price:"180€"},
+      {category:"Highlights", name:"Highlights and cut (extra long)", price:"180€"},
+      {category:"Highlights", name:"Highlights (short)", price:"90€"},
+      {category:"Highlights", name:"Highlights (medium)", price:"130€"},
+      {category:"Highlights", name:"Highlights (long)", price:"160€"},
+      {category:"Beard", name:"Beard and moustache styling", price:"20€"}
+    ],
+    ctaTitle:"Book your appointment easily today 😊",
+    ctaText:"Experience great service and your new style",
+    locationsTitle:"Our Location",
+    myyrmakiDesc:"Myyrmäki, Vantaa – Iskoskuja 1, 01600 Vantaa\nLocated next to Myyrmanni, opposite of Virtatalo.",
+    hoursTitle:"Opening Hours",
+    hoursMon:"Mon–Fri: 9:00–19:00",
+    hoursSat:"Sat: 10:00–18:00",
+    hoursSun:"Sun: 10:00–19:00",
+    bookingText:"Book Appointment"
+  }
+};
+
+function setLang(lang){
+  document.getElementById("subtitle").innerText = content[lang].subtitle;
+  document.getElementById("about-title").innerText = content[lang].aboutTitle;
+  document.getElementById("about-text").innerText = content[lang].aboutText;
+  document.getElementById("locations-title").innerText = content[lang].locationsTitle;
+  document.getElementById("myyrmaki-desc").innerText = content[lang].myyrmakiDesc;
+  document.getElementById("hours-title").innerText = content[lang].hoursTitle;
+  document.getElementById("hours-mon").innerText = content[lang].hoursMon;
+  document.getElementById("hours-sat").innerText = content[lang].hoursSat;
+  document.getElementById("hours-sun").innerText = content[lang].hoursSun;
+  document.getElementById("cta-title").innerText = content[lang].ctaTitle;
+  document.getElementById("cta-text").innerText = content[lang].ctaText;
+  document.getElementById("booking-btn").innerText = content[lang].bookingText;
+  document.getElementById("booking-btn-cta").innerText = content[lang].bookingText;
+
+  const container = document.getElementById("services-container");
+  container.innerHTML = "";
+  let currentCategory = "";
+
+  content[lang].services.forEach(service=>{
+    if(service.category!==currentCategory){
+      const catHeader = document.createElement("button");
+      catHeader.className="accordion";
+      catHeader.innerText = service.category;
+      container.appendChild(catHeader);
+
+      const panel = document.createElement("div");
+      panel.className="panel";
+      container.appendChild(panel);
+
+      catHeader.addEventListener("click", function() {
+        this.classList.toggle("active");
+        panel.style.display = panel.style.display === "block" ? "none" : "block";
+      });
+
+      currentCategory = service.category;
+    }
+
+    const panels = container.getElementsByClassName("panel");
+    const currentPanel = panels[panels.length-1];
+    const p = document.createElement("p");
+    p.innerText = `${service.name} – ${service.price}`;
+    currentPanel.appendChild(p);
+  });
+}
+
+setLang('fi');
+</script>
+
+</body>
+</html>
